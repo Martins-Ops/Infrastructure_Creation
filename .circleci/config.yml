@@ -48,6 +48,23 @@ jobs:
       # - run: return 1
       - destroy_environment
 
+  configure_infrastructure: 
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["b0:27:9d:bc:be:0f:49:d8:8f:8a:e3:a6:08:02:ab:01"] 
+      - run:
+          name: Install dependencies
+          command: |
+            # install the dependencies needed for your playbook
+            apk add --update ansible 
+      - run:
+          name: Configure server
+          command: |
+            ansible-playbook -i inventory main.yml
+
 
 
   
