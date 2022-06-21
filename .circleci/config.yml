@@ -21,16 +21,6 @@ commands:
             aws cloudformation delete-stack --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5}
 
 jobs:
-  say-hello:
-
-    docker:
-      - image: cimg/base:stable
-    steps:
-      - checkout
-      - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
-
   create_infrastructure: 
     docker:
       - image: amazon/aws-cli
@@ -56,21 +46,16 @@ jobs:
       - add_ssh_keys:
           fingerprints: ["b0:27:9d:bc:be:0f:49:d8:8f:8a:e3:a6:08:02:ab:01"] 
       - run:
-          name: Install dependencies
+          name: Install Ansible
           command: |
-            # install the dependencies needed for your playbook
             apk add --update ansible 
       - run:
           name: Configure server
           command: |
             ansible-playbook -i inventory main.yml
 
-
-
-  
-
 workflows:
-  say-hello-workflow:
+  Infra_config_workflow:
     jobs:
-      - say-hello
       - create_infrastructure
+      - configure_infrastructure
